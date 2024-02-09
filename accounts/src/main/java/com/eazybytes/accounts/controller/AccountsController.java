@@ -1,6 +1,7 @@
 package com.eazybytes.accounts.controller;
 
 import com.eazybytes.accounts.constants.AccountsConstants;
+import com.eazybytes.accounts.dto.ContactInfoProperties;
 import com.eazybytes.accounts.dto.CustomerDto;
 import com.eazybytes.accounts.dto.ErrorResponseDto;
 import com.eazybytes.accounts.dto.ResponseDto;
@@ -13,7 +14,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,11 +32,17 @@ import org.springframework.web.bind.annotation.*;
 )
 @RestController
 @RequestMapping(path="/api", produces = {MediaType.APPLICATION_JSON_VALUE})
-@AllArgsConstructor
 @Validated
 public class AccountsController {
 
+    @Autowired
     private IAccountsService iAccountsService;
+
+    @Value("${version}")
+    private String version;
+
+    @Autowired
+    ContactInfoProperties contactInfoDTO;
 
     @Operation(
             summary = "Create Account REST API",
@@ -162,5 +170,15 @@ public class AccountsController {
         }
     }
 
+    @GetMapping("/build-info")
+    public ResponseEntity<String> shareVersion()
+    {
+        return ResponseEntity.ok(version);
+    }
 
+    @GetMapping("/contact-info")
+    public ResponseEntity<ContactInfoProperties> shareContacts()
+    {
+        return ResponseEntity.ok(contactInfoDTO);
+    }
 }
