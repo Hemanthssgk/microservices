@@ -9,4 +9,5 @@ spring:
     config:
       server:
        native:
-       search-locations: "classpath:/config"
+         search-locations: "file:///D:/springbootPractice/microservices/microservices/ConfigurationFolder/"
+#       search-locations: "classpath:/config"
