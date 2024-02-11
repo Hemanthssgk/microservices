@@ -2,7 +2,12 @@ server:
   port: 8080
 spring:
   application:
-    name: "accounts"
+    name: "accounts" # this should be same name as of what we kept in configuration server yamls. so that client is gonna call server using this name
+  # using default profile incase not provided anything. and importing the yamls using the api call.
+  profiles:
+    active: "default"
+  config:
+    import: "configserver:http://localhost:8071/"# we can also use optional:configserver which will make this is optinal and starts the app
   datasource:
     url: jdbc:h2:mem:testdb
     driverClassName: org.h2.Driver
