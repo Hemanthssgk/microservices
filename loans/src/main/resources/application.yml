@@ -20,6 +20,16 @@ spring:
     active: "default"
   config:
     import: "configserver:http://localhost:8071/"
+    rabbitmq:
+      host: "localhost"
+      port: 5672
+      username: "guest"
+      password: "guest"
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 build:
   version: 2
 contact-Info:

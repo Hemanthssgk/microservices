@@ -21,6 +21,11 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "guest"
+    password: "guest"
 #  this will import the another yml. As iam gonna implement a config server. commenting this out!!!
 #  config:
 #    import:
@@ -29,7 +34,11 @@ spring:
 #  profiles:
 #    active:
 #      -test
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 build:
   version: "2"
 contact-Info:
