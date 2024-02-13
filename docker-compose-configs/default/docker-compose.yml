@@ -1,0 +1,111 @@
+# we are gonna make sure all the services are gonna run in same network.
+# we require configuration up and running before any of the service starts.
+# so iam setting that condtion. iam using health check every time.
+# once health check is good. it is gonna trigger the dependent container.volumes:
+# as all service are gonna run in their own container local host is not gonna work
+# we need to change the host name to service name it is exposing.
+
+networks:
+  microservices:
+    driver: "bridge"
+
+services:
+  rabbit:
+    image: rabbitmq:3.12-management
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    networks:
+      - microservices
+
+  configserver:
+    image: "ssgkhemanth99/configuration-server:latest"
+    container_name: configuration-ms
+    healthcheck:
+      test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    ports:
+      - "8071:8071"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - microservices
+    depends_on:
+      rabbit:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "cards"
+      SPRING_PROFILES_ACTIVE: "default"
+      SPRING_RABBITMQ_HOST: "rabbit"
+
+  accounts:
+    image: "ssgkhemanth99/accounts:latest"
+    container_name: accounts-ms
+    ports:
+      - "8080:8080"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - microservices
+    depends_on:
+      configserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "accounts"
+      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071/"
+      SPRING_PROFILES_ACTIVE: "default"
+      SPRING_RABBITMQ_HOST: "rabbit"
+
+  cards:
+    image: "ssgkhemanth99/cards:latest"
+    container_name: cards-ms
+    ports:
+      - "9000:9000"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - microservices
+    depends_on:
+      configserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "cards"
+      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071/"
+      SPRING_PROFILES_ACTIVE: "default"
+      SPRING_RABBITMQ_HOST: "rabbit"
+
+  loans:
+    image: "ssgkhemanth99/loans:latest"
+    container_name: loans-ms
+    ports:
+      - "8090:8090"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - microservices
+    depends_on:
+      configserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "cards"
+      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071/"
+      SPRING_PROFILES_ACTIVE: "default"
+      SPRING_RABBITMQ_HOST: "rabbit"

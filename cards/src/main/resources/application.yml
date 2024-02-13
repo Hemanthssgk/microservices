@@ -19,7 +19,11 @@ spring:
   profiles:
     active: "default"
   config:
-    import: "configserver:http://localhost:8071/"
+    # this is optional becuase, in docker compose i am gonna add another config server details.
+#    But problem is it is appened to this. so everytime it is looking for both local host and
+#  hostname what we provide in the docker compose. so iam using optional. just to make sure it
+#  works both in local and another environments.
+    import: "optional:configserver:http://localhost:8071/"
   rabbitmq:
     host: "localhost"
     port: 5672
