@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.configurationServer</groupId>
-	<artifactId>ConfigurationServer</artifactId>
+	<artifactId>configuration-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ConfigurationServer</name>
 	<description>Project for configuration server using spring cloud.</description>
@@ -22,16 +22,18 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
-<!--		this will enable configuration server -->
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-config-server</artifactId>
-		</dependency>
 <!--		this will enable loggin-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-logging</artifactId>
 		</dependency>
+
+		<!--		this will enable configuration server -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-config-server</artifactId>
+		</dependency>
+
 <!--		this will enable the cloud bus, which is used to remove the restarting of microservice when ever change is made.-->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -60,6 +62,16 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.4.0</version>
+				<configuration>
+					<to>
+						<image>ssgkhemanth99/${project.artifactId}</image>
+					</to>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
