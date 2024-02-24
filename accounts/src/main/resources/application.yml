@@ -25,11 +25,11 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-  rabbitmq:
-    host: "localhost"
-    port: 5672
-    username: "guest"
-    password: "guest"
+#  rabbitmq:
+#    host: "localhost"
+#    port: 5672
+#    username: "guest"
+#    password: "guest"
 #  this will import the another yml. As iam gonna implement a config server. commenting this out!!!
 #  config:
 #    import:
@@ -53,5 +53,14 @@ contact-Info:
     - "9581327524"
     - "7207492325"
   implemented_date: "2024-02-09"
+
+# below configuration will enable server discovery. they will help connecting accounts service with the eureka agent and fetches the available services and stores them in cache. Also register the service and deregister it when it stops..
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
 
 

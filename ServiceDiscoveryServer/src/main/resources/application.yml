@@ -1,16 +1,27 @@
-# this will run the server on 8070 port
-server:
-  port: 8070
+# this will run the server on 8070 port, putting below things in config server.
+#server:
+#  port: 8070
 
-#Eureka server configurations
-eureka:
-  instance:
-    hostname: localhost
-  client:
-    fetchRegistry: false
-    registerWithEureka: false
-    serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+spring:
+  application:
+    name: "eurekaServer"
+  # this will fetch the configurations from the eureka server.
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+
+#Eureka server configurations, putting below things in config server.
+#eureka:
+#  instance:
+# enabling the local host
+#    hostname: localhost
+#  client:
+# this says to the applcation whether to fetch the details from service registry or not. as this is server, hence we put it as false.
+#    fetchRegistry: false
+# this says whether this application needs to register to the service. we dont want, so it wont.
+#    registerWithEureka: false
+# our server will expose this url, we will post it in client services, using this they will register in the server.
+#    serviceUrl:
+#      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
 
 # below are acutator end points to manage applicaiton.. enabling health check endpoints
 management:

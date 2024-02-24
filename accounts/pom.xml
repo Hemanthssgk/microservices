@@ -62,11 +62,19 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-config</artifactId>
 		</dependency>
-		<!--		this will enable the cloud bus, which is used to remove the restarting of microservice when ever change is made.-->
+		<!--		this will enable the cloud bus and rabbit mq, which is used to remove the restarting of microservice when ever change is made.-->
+		<!--		uncomment this and yaml config to enable cloud bus-->
+		<!--		<dependency>-->
+		<!--			<groupId>org.springframework.cloud</groupId>-->
+		<!--			<artifactId>spring-cloud-starter-bus-amqp</artifactId>-->
+		<!--		</dependency>-->
+
+<!--		adding below dependency for service discovery-->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-bus-amqp</artifactId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

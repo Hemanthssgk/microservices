@@ -24,11 +24,11 @@ spring:
 #  hostname what we provide in the docker compose. so iam using optional. just to make sure it
 #  works both in local and another environments.
     import: "optional:configserver:http://localhost:8071/"
-  rabbitmq:
-    host: "localhost"
-    port: 5672
-    username: "guest"
-    password: "guest"
+#  rabbitmq:
+#    host: "localhost"
+#    port: 5672
+#    username: "guest"
+#    password: "guest"
 management:
   endpoints:
     web:
@@ -44,3 +44,12 @@ contact-Info:
     - "9581327524"
     - "7207492325"
   implemented_date: "2024-02-09"
+
+# below configuration will enable server discovery. they will help connecting accounts service with the eureka agent and fetches the available services and stores them in cache. Also register the service and deregister it when it stops..
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
