@@ -34,6 +34,16 @@ management:
     web:
       exposure:
         include: "*"
+  endpoint: # this will expose the shutdown url, which will allows us to shutdown the applciation from the url.
+    shutdown:
+      enabled: true
+  info: # we are enabling info related endpoints. so that it is used by the service discovery to register the application with the application information we provided in here.
+    env:
+      enabled: true
+endpoints:
+  shutdown:
+    enabled: true
+
 build:
   version: "2"
 contact-Info:
@@ -53,3 +63,10 @@ eureka:
     registerWithEureka: true
     serviceUrl:
       defaultZone: http://localhost:8070/eureka/
+
+# using these info details application is registered in the service registry....
+info:
+  app:
+    name: "cards"
+    description: "Eazy Bank Cards Application"
+    version: "1.0.0"
