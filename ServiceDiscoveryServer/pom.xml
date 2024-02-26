@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.serviceDiscovery</groupId>
-	<artifactId>ServiceDiscoveryServer</artifactId>
+	<artifactId>servicediscoveryserver</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ServiceDiscoveryServer</name>
 	<description>Demo project for eureka server</description>
@@ -57,6 +57,18 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<!--			mvn compile jib:dockerBuild use this command to build the images. if any password issue try using
+				docker login registry-1.docker.io then login.-->
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.4.0</version>
+				<configuration>
+					<to>
+						<image>ssgkhemanth99/${project.artifactId}</image>
+					</to>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
