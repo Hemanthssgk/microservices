@@ -1,0 +1,126 @@
+# we are gonna make sure all the services are gonna run in same network.
+# we require configuration up and running before any of the service starts.
+# so iam setting that condtion. iam using health check every time.
+# once health check is good. it is gonna trigger the dependent container.volumes:
+# as all service are gonna run in their own container local host is not gonna work
+# we need to change the host name to service name it is exposing.
+
+networks:
+  microservices:
+    driver: "bridge"
+
+services:
+  configserver:
+    image: "ssgkhemanth99/configuration-server:latest"
+    container_name: configuration-ms
+    healthcheck:
+      test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    ports:
+      - "8071:8071"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - microservices
+    environment:
+      SPRING_APPLICATION_NAME: "cards"
+      SPRING_PROFILES_ACTIVE: "default"
+
+  serviceDiscovery:
+    image: "ssgkhemanth99/servicediscoveryserver:latest"
+    container_name: eurekaServer-servicediscovery-ms
+    healthcheck:
+      test: "curl --fail --silent localhost:8070/actuator/health/readiness | grep UP || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    ports:
+      - "8070:8070"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - microservices
+    depends_on:
+      configserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "eurekaServer"
+      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071/"
+      SPRING_PROFILES_ACTIVE: "default"
+
+
+
+  accounts:
+    image: "ssgkhemanth99/accounts:latest"
+    container_name: accounts-ms
+    ports:
+      - "8080:8080"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - microservices
+    depends_on:
+      configserver:
+        condition: service_healthy
+      serviceDiscovery:
+        condition: service_healthy
+
+    environment:
+      SPRING_APPLICATION_NAME: "accounts"
+      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071/"
+      SPRING_PROFILES_ACTIVE: "default"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:  http://serviceDiscovery:8070/eureka/
+
+  cards:
+    image: "ssgkhemanth99/cards:latest"
+    container_name: cards-ms
+    ports:
+      - "9000:9000"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - microservices
+    depends_on:
+      configserver:
+        condition: service_healthy
+      serviceDiscovery:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "cards"
+      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071/"
+      SPRING_PROFILES_ACTIVE: "default"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:  http://serviceDiscovery:8070/eureka/
+
+  loans:
+    image: "ssgkhemanth99/loans:latest"
+    container_name: loans-ms
+    ports:
+      - "8090:8090"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - microservices
+    depends_on:
+      configserver:
+        condition: service_healthy
+      serviceDiscovery:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "loans"
+      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071/"
+      SPRING_PROFILES_ACTIVE: "default"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:  http://serviceDiscovery:8070/eureka/
