@@ -5,7 +5,7 @@ server:
 #Eureka server configurations
 eureka:
   instance:
-    hostname: hemanth
+    hostname: localhost
   client:
     fetchRegistry: false
     registerWithEureka: false
