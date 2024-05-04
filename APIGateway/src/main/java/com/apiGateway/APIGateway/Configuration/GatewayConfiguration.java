@@ -16,7 +16,8 @@ public class GatewayConfiguration {
     {
         return routeLocatorBuilder
                 .routes().route(incomingPath -> incomingPath.path("/eazybank/accounts/**")
-                        .filters(filter -> filter.rewritePath("/eazybank/accounts/(?<segment>.*)","/${segment}"))
+                        .filters(filter -> filter.rewritePath("/eazybank/accounts/(?<segment>.*)","/${segment}")
+                                .circuitBreaker(config -> config.setName("accountsCircuitBreaker").setFallbackUri("/fallback")))
                         .uri("lb://ACCOUNTS"))
                         .route(incomingPath -> incomingPath.path("/eazybank/cards/**")
                         .filters(filter -> filter.rewritePath("/eazybank/cards/(?<segment>.*)","/${segment}"))

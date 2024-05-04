@@ -46,8 +46,8 @@ management:
       probes:
         enabled: true
 
-logging:
-  level:
-    root: INFO
-    org.springframework.cloud: INFO
-#    org.springframework: DEBUG
+#logging:
+#  level:
+#    root: INFO
+#    org.springframework.cloud: INFO
+##    org.springframework: DEBUG
