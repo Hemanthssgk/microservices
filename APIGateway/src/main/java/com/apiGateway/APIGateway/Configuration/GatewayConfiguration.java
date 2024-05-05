@@ -20,10 +20,10 @@ public class GatewayConfiguration {
                                 .circuitBreaker(config -> config.setName("accountsCircuitBreaker").setFallbackUri("/fallback")))
                         .uri("lb://ACCOUNTS"))
                         .route(incomingPath -> incomingPath.path("/eazybank/cards/**")
-                        .filters(filter -> filter.rewritePath("/eazybank/cards/(?<segment>.*)","/${segment}"))
+                        .filters(filter -> filter.rewritePath("/eazybank/cards/(?<segment>.*)","/${segment}")).metadata("response-timeout", 1).metadata("connect-timeout",1)
                         .uri("lb://CARDS"))
                         .route(incomingPath -> incomingPath.path("/eazybank/loans/**")
-                        .filters(filter -> filter.rewritePath("/eazybank/loans/(?<segment>.*)","/${segment}"))
+                        .filters(filter -> filter.rewritePath("/eazybank/loans/(?<segment>.*)","/${segment}")).metadata("response-timeout", 1).metadata("connect-timeout",1)
                         .uri("lb://LOANS"))
                 .build();
     }
