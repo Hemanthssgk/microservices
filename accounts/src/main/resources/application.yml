@@ -58,11 +58,11 @@ resilience4j.retry:
       waitDuration: 500 # after a failure or a no response it waits for 500 ms.
       enableExponentialBackoff: true # this is enable to true, so that each retry is dependent on each other..
       exponentialBackoffMultiplier: 2 # this is set to 2 which means if one call fails, then another call is done after 500ms, now if that also fails next calls will be done at a factor of 2, 500ms * 2  = so next call happens at 1000ms
-      retryExceptions: # only for below exceptions retry will be triggered..... and if something is specified in retry, only for those case retry will happen others will be ignored.
-        - org.springframework.web.client.HttpServerErrorException
-        - java.io.IOException
-      ignoreExceptions: # this set of exceptions retry is ignored.....
-        - io.github.robwin.exception.BusinessException
+#      retryExceptions: # only for below exceptions retry will be triggered..... and if something is specified in retry, only for those case retry will happen others will be ignored.
+#        - org.springframework.web.client.HttpServerErrorException
+#        - java.io.IOException
+#      ignoreExceptions: # this set of exceptions retry is ignored.....
+#        - io.github.robwin.exception.BusinessException
 
 
 
