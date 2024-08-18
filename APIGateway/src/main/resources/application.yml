@@ -18,6 +18,12 @@ spring:
 #      httpclient:
 #        connect-timeout: 1000 # this is the waiting time for connection, if we dont get connection within a second it will throw us gateway error.
 #        response-timeout: 5s # this is response time, if another app is not responding for more than 5 sec it will throw gateway error.
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # at the startup of the app, api gateway connects to the keycloak server and will download the public certi. Using this  public certificate, resource server will validate whether shared access token is correct or not. keycloak has private key using which it will create access token.
+          jwk-set-uri: "http://localhost:7080/realms/master/protocol/openid-connect/certs"
 
 
 management:
@@ -49,6 +55,7 @@ info:
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
+    org.springframework: DEBUG
 
 #below are for the fault tolerance using resiliency4j circuit breaker pattern
 resilience4j.circuitbreaker:
