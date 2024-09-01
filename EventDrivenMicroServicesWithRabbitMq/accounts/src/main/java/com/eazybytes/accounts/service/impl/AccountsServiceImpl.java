@@ -2,6 +2,7 @@ package com.eazybytes.accounts.service.impl;
 
 import com.eazybytes.accounts.constants.AccountsConstants;
 import com.eazybytes.accounts.dto.AccountsDto;
+import com.eazybytes.accounts.dto.AccountsMsgDto;
 import com.eazybytes.accounts.dto.CustomerDto;
 import com.eazybytes.accounts.entity.Accounts;
 import com.eazybytes.accounts.entity.Customer;
@@ -13,6 +14,7 @@ import com.eazybytes.accounts.repository.AccountsRepository;
 import com.eazybytes.accounts.repository.CustomerRepository;
 import com.eazybytes.accounts.service.IAccountsService;
 import lombok.AllArgsConstructor;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,6 +27,8 @@ public class AccountsServiceImpl  implements IAccountsService {
 
     private AccountsRepository accountsRepository;
     private CustomerRepository customerRepository;
+    private final StreamBridge streamBridge;
+
 
     /**
      * @param customerDto - CustomerDto Object
@@ -38,7 +42,18 @@ public class AccountsServiceImpl  implements IAccountsService {
                     +customerDto.getMobileNumber());
         }
         Customer savedCustomer = customerRepository.save(customer);
-        accountsRepository.save(createNewAccount(savedCustomer));
+        Accounts accounts = accountsRepository.save(createNewAccount(savedCustomer));
+        sendCommunication(accounts,savedCustomer);
+    }
+
+    private void sendCommunication(Accounts accounts, Customer savedCustomer) {
+        AccountsMsgDto accountsDto = new AccountsMsgDto(accounts.getAccountNumber(),savedCustomer.getName(),
+                savedCustomer.getEmail(),savedCustomer.getMobileNumber());
+        System.out.println("sending the communication to message service");
+        System.out.println("Accoutn no created is----"+accounts.getAccountNumber());
+        var result = streamBridge.send("send-communication",accountsDto);
+        System.out.println("Check the status was it able to push to broker?? "+ result);
+
     }
 
     /**

@@ -1,0 +1,15 @@
+spring:
+  cloud:
+    function:
+      definition: email|sms # putting this it will expose another endpoint named emailsms, when called. both the functions are called.
+    stream:
+      bindings:
+        emailsms-in-0:
+          destination: send-communication
+          group: ${spring.application.name}
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    connection-timeout: 10s

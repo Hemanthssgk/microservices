@@ -1,11 +1,11 @@
 server:
   port: 9010
 spring:
+  config:
+    import:
+      - classpath:EventDrivenConfigs.yml
   application:
     name: "message"
-  cloud:
-    function:
-      definition: email|sms # putting this it will expose another endpoint named emailsms, when called. both the functions are called.
 
 logging:
 #  level:
