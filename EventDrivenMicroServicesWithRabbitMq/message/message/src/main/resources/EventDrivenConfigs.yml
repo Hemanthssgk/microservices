@@ -1,10 +1,12 @@
 spring:
   cloud:
     function:
-      definition: email|sms # putting this it will expose another endpoint named emailsms, when called. both the functions are called.
+      definition: email|sms # putting this it will create input and output bindings automatically
     stream:
       bindings:
-        emailsms-in-0:
+        emailsms-out-0: # this will create a exchange and bind it to the queue provided.
+          destination: communication-sent
+        emailsms-in-0: # this will create a queue in the rabbitmq.
           destination: send-communication
           group: ${spring.application.name}
   rabbitmq:
