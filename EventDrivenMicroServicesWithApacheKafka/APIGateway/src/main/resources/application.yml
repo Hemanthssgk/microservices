@@ -1,0 +1,68 @@
+spring:
+  application:
+    name: "apiGateway"
+  config:
+    # this is optional becuase, in docker compose i am gonna add another config server details.
+    #    But problem is it is appened to this. so everytime it is looking for both local host and
+    #  hostname what we provide in the docker compose. so iam using optional. just to make sure it
+    #  works both in local and another environments.
+    import: "optional:configserver:http://localhost:8071/"
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false # making it false cause i wanted to disable default api path.
+#          this will allow us to call with lower case, by default upper case is used
+          lower-case-service-id: true
+      # global time out settings..
+#      httpclient:
+#        connect-timeout: 1000 # this is the waiting time for connection, if we dont get connection within a second it will throw us gateway error.
+#        response-timeout: 5s # this is response time, if another app is not responding for more than 5 sec it will throw gateway error.
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # at the startup of the app, api gateway connects to the keycloak server and will download the public certi. Using this  public certificate, resource server will validate whether shared access token is correct or not. keycloak has private key using which it will create access token.
+          jwk-set-uri: "http://localhost:7080/realms/master/protocol/openid-connect/certs"
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  endpoint:
+    gateway:
+      enabled: true
+    health:
+      probes:
+        enabled: true
+  info: # we are enabling info related endpoints. so that it is used by the service discovery to register the application with the application information we provided in here.
+    env:
+      enabled: true
+
+info:
+  app:
+    name: "apiGateway"
+    description: "Eazy Bank apiGateway Application"
+    version: "1.0.0"
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework: DEBUG
+
+#below are for the fault tolerance using resiliency4j circuit breaker pattern
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 10 # This is the number of calls considered to decide the state of the circuit breaker.
+      permittedNumberOfCallsInHalfOpenState: 2 # The maximum number of permitted calls in half-open state before transitioning to open or closed.
+      waitDurationInOpenState: 10000 # The duration the circuit breaker stays open before transitioning to half-open state.
+      failureRateThreshold: 50 # If the failure rate exceeds this threshold, the circuit is kept open.
+

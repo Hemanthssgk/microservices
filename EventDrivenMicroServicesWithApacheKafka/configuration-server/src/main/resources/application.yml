@@ -1,0 +1,53 @@
+server:
+  port: 8071
+spring:
+  application:
+    name: "configserver"
+  profiles:
+    active: git
+#     active: native
+  cloud:
+    config:
+      server:
+        git:
+#          we are saying spring cloud where the configurations are. and using this spring cloud will clone the changes.
+          uri: https://github.com/Hemanthssgk/microservices.git
+#          we are saying to spring cloud in which branch under the repo the configurations are, so that it can clone and then checkout to the branch.
+          default-label: "feature/configurationBranch"
+#          after checking out we need to say to the cloud in which folder it has to search for the configurations
+          search-paths: "/configurations"
+#          we are saying spring cloud to checking for 5 seconds. once after 5 sec no response is received it will throw error
+          timeout: 5
+#          we are specifying this to clone at strt
+          clone-on-start: true
+#          this will force pull the changes whenever there are changes
+          force-pull: true
+#       native:
+#         search-locations: "file:///D:/springbootPractice/microservices/microservices/ConfigurationFolder/"
+#         search-locations: "classpath:/config"
+
+#  rabbitmq:
+#    host: "localhost"
+#    port: 5672
+#    username: "guest"
+#    password: "guest"
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+#logging:
+#  level:
+#    root: INFO
+#    org.springframework.cloud: INFO
+##    org.springframework: DEBUG

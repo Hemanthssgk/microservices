@@ -1,0 +1,17 @@
+spring:
+  cloud:
+    function:
+      definition: email|sms # putting this it will create input and output bindings automatically
+    stream:
+      bindings:
+        emailsms-out-0: # this will create a exchange and bind it to the queue provided.
+          destination: communication-sent
+        emailsms-in-0: # this will create a queue in the rabbitmq.
+          destination: send-communication
+          group: ${spring.application.name}
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    connection-timeout: 10s
