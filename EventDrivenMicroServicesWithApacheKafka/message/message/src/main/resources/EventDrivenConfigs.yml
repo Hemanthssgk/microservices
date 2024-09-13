@@ -9,9 +9,7 @@ spring:
         emailsms-in-0: # this will create a queue in the rabbitmq.
           destination: send-communication
           group: ${spring.application.name}
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-    connection-timeout: 10s
+      kafka:
+        binder:
+          brokers:
+            - localhost:9092
