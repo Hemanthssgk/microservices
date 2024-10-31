@@ -3,13 +3,13 @@ spring:
     function:
       definition: updateCommunication # putting this it will create input and output bindings automatically
     stream:
-      bindings:
+      bindings: # using below configs, Above created bindings will help to connect exchange and queue.
         updateCommunication-in-0: # this will create a queue in the rabbitmq.
           destination: communication-sent
           group: ${spring.application.name}
         sendCommunication-out-0: # this will create a exchange and bind it to the queue provided.
           destination: send-communication
-  rabbitmq:
+  rabbitmq: # using below configs we are going to connect to the broker.
     host: localhost
     port: 5672
     username: guest
